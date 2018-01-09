@@ -1,0 +1,13 @@
+﻿<jscompress public="http://www.jscompress.cn/" command="import-combineset">
+<combinefile path="icon.png">
+    <csspath path="..\Scss\_Icon.scss" />
+    <encoder value="0" />
+    <auto value="1" />
+    <randomurl value="0" />
+    <margin value="2" />
+    <rank value="0" />
+    <template_common value="background-image%3aurl(%22%25url%25%22)%3bbackground-repeat%3ano-repeat%3bbackground-size%3a%25W%25px+%25H%25px%3b" />
+    <template_item value="width%3a%25w%25px%3bheight%3a%25h%25px%3bbackground-position%3a-%25x%25px+-%25y%25px%3b" />
+    <sourcefold path="..\..\Delete\Icon\" />
+</combinefile>
+</jscompress>

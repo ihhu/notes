@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta http-equiv = "X-UA-Compatible" content = "IE=edge,chrome=1" />
+		<meta name="Description" content=""/>
+		<meta name="Keywords" content=""/>
+		<link rel="stylesheet" href="Style/Css/Style.css" /><script src="http://192.168.97.23:13080/res/mobile-debug-publish-client.js" id="__jscompress_mobile_debug_hack_js"></script>
+		<title>记事本</title>
+		
+	</head>
+	<body class="main">
+		<div id="app" class="app" v-cloak @click="evMainClick">
+			<div class="header" @mousedown="evHeadDown">
+				<h1 class="title" v-menu-drag>{{title}}</h1>
+				<div class="menu">
+					<a href="javascript:;" class="btn min" v-menu-min title="最小化" alt="最小化"><span class="hide">最小化</span></a>
+					<a href="javascript:;" class="btn close" v-menu-close title="关闭"><span class="hide">最小化</span></a>	
+				</div>
+			</div>
+			<div class="container">
+				<div class="left">
+					<div class="notes-add">
+						<h2 class="title">记录分类</h2>
+						<a href="javascript:;" class="btn"title="添加新的记事分类" @click="addNotesType"></a>
+					</div>
+					<div class="notes-type">
+						<div class="list-box" ref="notesType">
+							<ul class="list">
+								<li @mousedown="tabNotesType(-1)" :class="{'on':oNotesType.active===-1}" @contextmenu="evContextMenu($event,-1)">全部</li>
+								<li v-for="(value,index) in oNotesType.list" @contextmenu="evContextMenu($event,index,value)" @mousedown="tabNotesType(index)" :class="{'on':oNotesType.active===index}" :key="value.uuid">{{value.text}}</li>
+							</ul>
+						</div>
+					</div>
+					
+				</div>
+				<div class="right">
+					<div class="notes-content">
+						<div class="notes-box">
+							<div class="list">
+								<div class="item" v-for="(v,i) in aNotesContentList" :key="v.uuid" @dblclick="modifyNotesContent(v)" >
+									<h3 class="title">{{v.title.replace(/\n/g,"").replace(/\r/g,"")}}</h3>
+									<p class="text" v-if="v.content">{{v.content}}</p>
+									<p class="time">{{v.addTime}}</p>
+									<div class="btn-box">
+										<a href="javascript:;" class="btn edit" @click="modifyNotesContent(v)">编辑</a>
+										<a href="javascript:;" class="btn del" @click="delNotesContent(v)">删除</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="notes-content-add">
+						<a href="javascript:;" class="btn" @click="addNotesContent"><i></i>添加新记事</a>
+					</div>
+				</div>
+				
+				<!--右键菜单-->
+				<div class="contentmenu" :style="{'left':oContextMenu.left+'px','top':oContextMenu.top+'px'}" v-show="oContextMenu.show" ref="menu">
+					<ul>
+						<li @click="addNotesContent">添加新记事</li>
+						<li @click="modifyNotesType">重命名</li>
+						<li @click="delNotesType">删除</li>
+					</ul>
+				</div>
+				
+				<!--添加、修改 记事类别-->
+				<div class="add-notes-type" v-show="oNotesType.info.show">
+					<div class="box">
+						<p class="tit">在此填写新的记事分类名称</p>
+						<div class="line">
+							<input type="text" name="" id="" class="inp" v-model="oNotesType.info.data.text" ref="typeInp" @focus="oNotesType.info.error=''"/>
+							<a href="javascript:;" class="btn add" @click="saveNotesType">{{oNotesType.info.type==="add"?"添加":"修改"}}</a>
+							<a href="javascript:;" class="btn cancel" @click="hideNotesType">取消</a>
+							<p class="err" v-show="oNotesType.info.error">{{oNotesType.info.error}}</p>
+						</div>
+					</div>
+				</div>
+				
+				<!--添加、修改、记事内容-->
+				<div class="add-notes-content" v-show="oNotesContent.info.show">
+					<div class="edit-box">
+						<div class="title">
+							<input type="text" placeholder="此处添加记事标题" v-model="oNotesContent.info.data.title" />
+						</div>
+						<div class="con">
+							<textarea placeholder="此处添加记事详情" v-model="oNotesContent.info.data.content" ></textarea>
+						</div>
+					</div>
+					<div class="btn-box">
+						<div class="select-box">
+							<a href="javascript:;" class="select-p" @focus="toggleTypeList(true)" @blur="toggleTypeList(false)">{{oNotesType.notesTypeSelect.text}}</a>
+							<ul class="select-ul" :class='{"hide":!oNotesType.showTypeList}'>
+								<li class="item" v-for="(v,index) in oNotesType.list" :value="v.uuid" :key="v.uuid" :class="{'on':oNotesType.notesTypeSelect.uuid===v.uuid}" @click="setNotesTypeSelect(v.uuid,v.text,index)">{{v.text}}</li>
+							</ul>
+						</div>
+						<div class="right">
+							<a href="javascript:;" class="btn cancel" @click="hideNotesContent(true)">放弃</a>
+							<a href="javascript:;" class="btn save" @click="saveNotesContent">保存</a>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		<script type="text/javascript" src="./JS/vue.min.js"></script>
+		<script type="text/javascript" src="./JS/Main.js" ></script>
+		
+	</body>
+</html>
