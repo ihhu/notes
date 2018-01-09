@@ -1,0 +1,142 @@
+$isMobile:true;
+
+//前缀
+@mixin css3($property, $value...) { 
+    @if $isMobile{
+        @each $prefix in -webkit-,'' { 
+            #{$prefix}#{$property}: $value;
+        }
+    }
+    @else{
+        @each $prefix in -webkit-,-moz-,-ms-,-o-,'' { 
+            #{$prefix}#{$property}: $value;
+        }
+    }
+    
+}
+
+//伸缩盒（旧）
+@mixin box($pack:start,$align:start,$orient:horizontal){
+    display: -webkit-box;
+    display: box;
+    -webkit-box-pack: $pack;
+    box-pack: $pack; 
+    -webkit-box-align: $align;
+    box-align: $align;
+    -webkit-box-orient: $orient;
+    box-orient: $orient;
+}
+//box居中
+@mixin pack-c{@include box($pack:center);}
+@mixin align-c{@include box($align:center);}
+@mixin box-c{@include box($pack:center,$align:center)}
+//box纵向布局
+@mixin box-v{@include box($orient:vertical)}
+
+//文本溢出省略号显示
+@mixin ellipsis($line:1){
+    @if $line==1 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    @else {
+        display: -webkit-box;
+        -webkit-line-clamp: $line;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+// 过渡
+@mixin transition($transition...) {
+    @include css3(transition,$transition)
+}
+
+// 旋转位置
+@mixin transform-origin($origin...) {
+    @include css3(transform-origin,$origin)
+}
+
+//转换
+@mixin transform($transform...) {
+    @include css3(transform,$transform)
+}
+
+// 动画名称
+@mixin animation($aniName...) {
+    @include css3(animation,$aniName)
+}
+
+// 延迟执行时间
+@mixin animation-delay($time) {
+    @include css3(animation-delay,$time)
+}
+
+// 延迟执行时间
+@mixin transition-delay($time) {
+    @include css3(transition-delay,$time)
+}
+
+//动画定义
+@mixin keyframes($animationName) {
+    @-webkit-keyframes #{$animationName} {  
+        @content;  
+    }  
+    @-moz-keyframes #{$animationName} {  
+        @content;  
+    }  
+    @-o-keyframes #{$animationName} {  
+        @content;  
+    }  
+    @keyframes #{$animationName} {  
+        @content;  
+    }  
+}
+
+//高清屏 1px问题简单处理
+//@include retina-border($position:relative){
+//    border:1px solid #ddd;
+//    border-radius:rem(3);
+//}
+@mixin retina-border($position:relative,$class:before){
+    @media (-webkit-min-device-pixel-ratio: 2) { 
+        &{border:none;position: $position}
+        &:#{$class}{
+            content:"";
+            position: absolute;
+            left:0;
+            top:0;
+            width: 200%;
+            height: 200%;
+            pointer-events: none;
+            z-index: -1;
+            @include transform-origin(left top);
+            @include transform(scale(.5));
+            @content;
+        }
+    }
+}
+
+// 禁用样式，加!important 
+@mixin disabled($bgColor:#e6e6e6,$textColor:#ababab){
+    background-color: $bgColor !important;
+    color: $textColor !important;
+    cursor: not-allowed !important;
+    pointer-events: none;
+}
+
+//统一按钮样式
+@mixin btn-css($w:110,$h:36,$color:#fff,$bg:#00A2FF){
+    display: block;width:$w+px;height:$h+px;background:$bg;color:$color;line-height: $h+"px";text-align: center;
+    &:hover{background:lighten($bg,5%);}
+    &:active{background:darken($bg,5%);}
+    &.dis{@include disabled(#d9d9d9,#fff);border:none;}
+}
+
+//统一图片样式
+@mixin imgbox($w:0,$h:0){
+    width:$w;height:$h;overflow:hidden;
+    img{display: block;width:100%;}
+}
